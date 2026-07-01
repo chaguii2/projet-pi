@@ -1,0 +1,121 @@
+{
+  "info": {
+    "_postman_id": "smart-parking-reservation-flow",
+    "name": "Smart Parking Reservation Flow",
+    "description": "Collection Postman complète pour tester le scénario complet du début jusqu'à la réservation d'une place de parking, étapes numérotées.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Inscription Client",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Jean Dupont\",\n  \"email\": \"jean.dupont@example.com\",\n  \"password\": \"superSecret123\",\n  \"phone\": \"0612345678\",\n  \"role\": \"client\",\n  \"vehiclePlate\": \"AA123BB\",\n  \"vehicleSerialNumber\": \"VF3123456789\",\n  \"vehicleType\": \"car\"\n}" }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2. Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"jean.dupont@example.com\",\n  \"password\": \"superSecret123\"\n}" }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json.token) {",
+              "  pm.environment.set('token', json.token);",
+              "}" 
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "3. Récupérer Mon Profil",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/users/me",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "me"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4. Lister Tous les parkings",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/parking/map/parkings",
+          "host": ["{{baseUrl}}"],
+          "path": ["parking", "map", "parkings"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5. Lister les places d'un parking",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/parking/{{parkingId}}/spots",
+          "host": ["{{baseUrl}}"],
+          "path": ["parking", "{{parkingId}}", "spots"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6. Réserver une place (mettre le statut)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"occupied\"\n}" }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/parking/spots/{{spotId}}/status",
+          "host": ["{{baseUrl}}"],
+          "path": ["parking", "spots", "{{spotId}}", "status"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

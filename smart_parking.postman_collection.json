@@ -1,0 +1,957 @@
+{
+  "info": {
+    "_postman_id": "smart-parking-api-collection",
+    "name": "Smart Parking API Collection",
+    "description": "Collection Postman complète pour tester toutes les fonctionnalités et scénarios du projet Smart Parking.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentification",
+      "item": [
+        {
+          "name": "Inscription Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jean Dupont\",\n  \"email\": \"jean.dupont@example.com\",\n  \"password\": \"superSecret123\",\n  \"phone\": \"0612345678\",\n  \"role\": \"client\",\n  \"vehiclePlate\": \"AA123BB\",\n  \"vehicleSerialNumber\": \"VF3123456789\",\n  \"vehicleType\": \"car\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Inscription Entreprise",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Eiffage Parking SA\",\n  \"email\": \"contact@eiffage-parking.com\",\n  \"password\": \"eiffagePass123\",\n  \"phone\": \"0198765432\",\n  \"role\": \"company\",\n  \"address\": \"12 Boulevard de l'Europe, 69002 Lyon\",\n  \"siret\": \"98765432100025\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.environment.set(\"token\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jean.dupont@example.com\",\n  \"password\": \"superSecret123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mot de passe oublié",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jean.dupont@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Réinitialiser mot de passe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"coller_le_token_ici\",\n  \"password\": \"nouveauMotDePasse123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Profil & Employés",
+      "item": [
+        {
+          "name": "Mon Profil (Self)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modifier Profil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nom Modifié\",\n  \"phone\": \"0600000000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Demander Intégration Parking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Parking Tunis Centre\",\n  \"address\": \"Avenue Habib Bourguiba\",\n  \"city\": \"Tunis\",\n  \"zipCode\": \"1000\",\n  \"totalSpots\": 80,\n  \"pricePerHour\": 2.5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/parking-request",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "parking-request"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Créer un Employé",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sarah Connor\",\n  \"email\": \"sarah.connor@eiffage-parking.com\",\n  \"password\": \"t800employee\",\n  \"phone\": \"0600000000\",\n  \"parkingId\": \"coller_id_parking_approuve_ici\",\n  \"position\": \"agent\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/employees",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "employees"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Liste des Employés",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/employees",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "employees"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer son compte",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Super Admin",
+      "item": [
+        {
+          "name": "Liste des Entreprises",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/companies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "companies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approuver Entreprise",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/companies/:id/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "companies",
+                ":id",
+                "approve"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "id_entreprise"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rejeter Entreprise",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Le numéro SIRET fourni est invalide.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/companies/:id/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "companies",
+                ":id",
+                "reject"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "id_entreprise"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Suspendre Entreprise",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/companies/:id/suspend",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "companies",
+                ":id",
+                "suspend"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "id_entreprise"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Liste demandes Parkings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/parkings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "parkings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approuver Parking",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/parkings/:id/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "parkings",
+                ":id",
+                "approve"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "id_parking"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rejeter Parking",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Les tarifs horaires dépassent la limite autorisée.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/parkings/:id/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "parkings",
+                ":id",
+                "reject"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "id_parking"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Intelligence Artificielle (Mistral)",
+      "item": [
+        {
+          "name": "IA Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ia/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ia",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lieux supportés",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ia/locations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ia",
+                "locations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Chat IA",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Quels sont les parkings disponibles près de Tunis ?\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/ia/chat",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ia",
+                "chat"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Carte & Places de Parking",
+      "item": [
+        {
+          "name": "Tous les parkings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/parking/map/parkings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parking",
+                "map",
+                "parkings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Parkings à proximité",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/parking/map/parkings/nearby?lat=36.8065&lng=10.1815&radius=5000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parking",
+                "map",
+                "parkings",
+                "nearby"
+              ],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "36.8065"
+                },
+                {
+                  "key": "lng",
+                  "value": "10.1815"
+                },
+                {
+                  "key": "radius",
+                  "value": "5000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Vérifier si ouvert",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/parking/map/parkings/:parkingId/is-open",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parking",
+                "map",
+                "parkings",
+                ":parkingId",
+                "is-open"
+              ],
+              "variable": [
+                {
+                  "key": "parkingId",
+                  "value": "id_du_parking"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Statistiques Globales Carte",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/parking/map/statistics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parking",
+                "map",
+                "statistics"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Parkings dans Bounding Box",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"north\": 36.81,\n  \"south\": 36.79,\n  \"east\": 10.19,\n  \"west\": 10.17\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/parking/map/parkings/bounds",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parking",
+                "map",
+                "parkings",
+                "bounds"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Toutes les places d'un parking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/parking/:parkingId/spots",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parking",
+                ":parkingId",
+                "spots"
+              ],
+              "variable": [
+                {
+                  "key": "parkingId",
+                  "value": "id_du_parking"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mettre à jour le statut d'une place",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"occupied\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/parking/spots/:spotId/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parking",
+                "spots",
+                ":spotId",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "spotId",
+                  "value": "id_de_la_place"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Générer les Places (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"count\": 20\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/parking/:parkingId/generate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parking",
+                ":parkingId",
+                "generate"
+              ],
+              "variable": [
+                {
+                  "key": "parkingId",
+                  "value": "id_du_parking"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Démarrer Simulation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parking/:parkingId/simulate/start",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parking",
+                ":parkingId",
+                "simulate",
+                "start"
+              ],
+              "variable": [
+                {
+                  "key": "parkingId",
+                  "value": "id_du_parking"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Arrêter Simulation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parking/:parkingId/simulate/stop",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parking",
+                ":parkingId",
+                "simulate",
+                "stop"
+              ],
+              "variable": [
+                {
+                  "key": "parkingId",
+                  "value": "id_du_parking"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Boîte de Réception Virtuelle",
+      "item": [
+        {
+          "name": "Consulter les Mails",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/mock-emails",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mock-emails"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Vider les Mails",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/mock-emails",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mock-emails"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

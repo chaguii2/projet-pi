@@ -1,0 +1,276 @@
+{
+	"info": {
+		"_postman_id": "a98fd22d-cf48-4395-8123-bc978a3c9bb2",
+		"name": "Smart Parking - Subscription Module",
+		"description": "Collection pour tester le module d'abonnements relié entre Clients et Parkings d'Entreprise.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Public",
+			"item": [
+				{
+					"name": "Obtenir les forfaits par parking",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/subscriptions/plans/parking/{{parkingId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"subscriptions",
+								"plans",
+								"parking",
+								"{{parkingId}}"
+							]
+						},
+						"description": "Récupérer la liste des forfaits actifs configurés pour un parking."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Entreprise (Company)",
+			"item": [
+				{
+					"name": "Obtenir les parkings de l'entreprise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/company/parkings",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"company",
+								"parkings"
+							]
+						},
+						"description": "Obtenir la liste de vos propres parkings (soumis/approuvés)."
+					},
+					"response": []
+				},
+				{
+					"name": "Créer un forfait d'abonnement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"parkingId\": \"{{parkingId}}\",\n  \"name\": \"Pass Mensuel Illimité\",\n  \"description\": \"Accès garanti 24/7 avec place réservée et lavage inclus.\",\n  \"price\": 49.99,\n  \"durationDays\": 30,\n  \"features\": [\n    \"Accès 24/7\",\n    \"Place réservée\",\n    \"Lavage mensuel inclus\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/subscriptions/plans",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"subscriptions",
+								"plans"
+							]
+						},
+						"description": "Permet à l'entreprise de créer un nouveau plan d'abonnement pour son parking."
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier un forfait d'abonnement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Pass Mensuel Privilège\",\n  \"price\": 45.00,\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/subscriptions/plans/{{planId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"subscriptions",
+								"plans",
+								"{{planId}}"
+							]
+						},
+						"description": "Modifier ou désactiver un plan d'abonnement."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtenir la liste des clients abonnés",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/subscriptions/company/subscribers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"subscriptions",
+								"company",
+								"subscribers"
+							]
+						},
+						"description": "Obtenir la liste des abonnements souscrits par des clients à vos parkings."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "Acheter un abonnement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"planId\": \"{{planId}}\",\n  \"paymentMethod\": \"card\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/subscriptions/buy",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"subscriptions",
+								"buy"
+							]
+						},
+						"description": "Acheter un abonnement pour un parking spécifique."
+					},
+					"response": []
+				},
+				{
+					"name": "Consulter mes abonnements",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/subscriptions/client/my",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"subscriptions",
+								"client",
+								"my"
+							]
+						},
+						"description": "Obtenir la liste de vos propres abonnements souscrits."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000/api",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "INSEREZ_VOTRE_TOKEN_JWT_ICI",
+			"type": "string"
+		},
+		{
+			"key": "parkingId",
+			"value": "INSEREZ_L_ID_DU_PARKING_ICI",
+			"type": "string"
+		},
+		{
+			"key": "planId",
+			"value": "INSEREZ_L_ID_DU_FORFAIT_ICI",
+			"type": "string"
+		}
+	]
+}
